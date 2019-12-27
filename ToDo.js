@@ -18,10 +18,29 @@ export default class ToDo extends React.Component {
       const { isCompleted } = this.state;
     return (
       <View style={styles.container}>
+        <View style={styles.column}>
         <TouchableOpacity onPress={}>
           <View style={[styles.circle, isCompleted ? styles.completedCircle : styles.uncompletedCircle]} />
         </TouchableOpacity>
-        <Text style={styles.text}>Hello I`m a ToDo</Text>
+        <Text style={styles.text, isCompleted ? styles.completedText : styles.uncompletedText}>Hello I`m a ToDo</Text>
+        </View>
+        <View style={styles.column}>
+            {isEditing ? 
+              <View style={styles.actions}>
+                <TouchableOpacity>
+                  <View style={styles.actionsContainer}>
+                    <Text style={styles.actionText}></Text>
+                  </View> 
+                </TouchableOpacity>
+              </View>
+              : <View style={styles.actions}>
+              <TouchableOpacity>
+                <View style={styles.actionsContainer}>
+                  <Text style={styles.actionText}></Text>
+                </View> 
+              </TouchableOpacity>
+            </View>}
+        </View>
       </View>
     );
   }
@@ -62,5 +81,12 @@ const styles = StyleSheet.create({
   },
   circle: {
       width:
+  },
+  completedText: {
+    color: "#bbb",
+    textDecorationLine: "line-through"
+  },
+  uncompletedText: {
+    color: "#353839"
   }
 });
