@@ -15,42 +15,71 @@ export default class ToDo extends React.Component {
     isCompleted: false
   };
   render() {
-      const { isCompleted } = this.state;
+    const { isCompleted, isEditing } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.column}>
-        <TouchableOpacity onPress={}>
-          <View style={[styles.circle, isCompleted ? styles.completedCircle : styles.uncompletedCircle]} />
-        </TouchableOpacity>
-        <Text style={styles.text, isCompleted ? styles.completedText : styles.uncompletedText}>Hello I`m a ToDo</Text>
+          <TouchableOpacity onPress={this._finishEditing}>
+            <View
+              style={[
+                styles.circle,
+                isCompleted ? styles.completedCircle : styles.uncompletedCircle
+              ]}
+            />
+          </TouchableOpacity>
+          <Text
+            style={
+              (styles.text,
+              isCompleted ? styles.completedText : styles.uncompletedText)
+            }
+          >
+            Hello I`m a ToDo
+          </Text>
         </View>
         <View style={styles.column}>
-            {isEditing ? 
-              <View style={styles.actions}>
-                <TouchableOpacity>
-                  <View style={styles.actionsContainer}>
-                    <Text style={styles.actionText}></Text>
-                  </View> 
-                </TouchableOpacity>
-              </View>
-              : <View style={styles.actions}>
+          {isEditing ? (
+            <View style={styles.actions}>
               <TouchableOpacity>
                 <View style={styles.actionsContainer}>
-                  <Text style={styles.actionText}></Text>
-                </View> 
+                  <Text style={styles.actionText}>v</Text>
+                </View>
               </TouchableOpacity>
-            </View>}
+            </View>
+          ) : (
+            <View style={styles.actions}>
+              <TouchableOpacity onPressOut={this._startEditing}>
+                <View style={styles.actionsContainer}>
+                  <Text style={styles.actionText}>ㅁ</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <View style={styles.actionsContainer}>
+                  <Text style={styles.actionText}>x</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     );
   }
-  toggleComplete = () => {
-      this.setState( prevState => {
-          return {
-              isCompleted: !prevState.isCompleted
-          }
-      })
-  }
+  _toggleComplete = () => {
+    this.setState(prevState => {
+      return {
+        isCompleted: !prevState.isCompleted
+      };
+    });
+  };
+  _startEditing = () => {
+    this.setState({
+      isEditing: true
+    });
+  };
+  _finishEditing = () => {
+    this.setState({
+      isEditing: false
+    });
+  };
 }
 
 const styles = StyleSheet.create({
@@ -58,7 +87,9 @@ const styles = StyleSheet.create({
     width: width - 50,
     borderBottomColor: "#bbb",
     borderBottomWidth: StyleSheet.hairlineWidth,
-    flexDirection: "row"
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: ""
   },
   circle: {
     width: 30,
@@ -67,9 +98,9 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderWidth: 10,
     marginRight: 20
-  },    
-  completedCircle:{
-      borderColor: "#bbb"
+  },
+  completedCircle: {
+    borderColor: "#bbb"
   },
   uncompletedCircle: {
     borderColor: "#F23657"
@@ -80,7 +111,7 @@ const styles = StyleSheet.create({
     marginVertical: 20
   },
   circle: {
-      width:
+    width: 100
   },
   completedText: {
     color: "#bbb",
@@ -88,5 +119,18 @@ const styles = StyleSheet.create({
   },
   uncompletedText: {
     color: "#353839"
+  },
+  column: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: width / 2,
+    jusrfyContent: "space-between"
+  },
+  actions: {
+    flexDirection: "row"
+  },
+  actionsContainer: {
+    marginVertical: 10,
+    marginHorizontal: 10
   }
 });

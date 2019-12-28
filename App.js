@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,24 +9,45 @@ import {
   Platform,
   ScrollView
 } from "react-native";
-import { render } from "react-dom";
-import Todo from './ToDo';
+import Todo from "./ToDo";
 
 const { height, width } = Dimensions.get("window");
 
-export default function App() {
+class App extends Component {
   state = {
     newToDo: ""
+    // ,
+    // loadedToDos: false,
+    // toDos: {}
   };
 
-  render(){
-    const { newToDo } = this.state;
+  // componentDidMount = () => {
+  //   this._loadToDos();
+  // };
+
+  render() {
+    const {
+      newToDo
+      // , loadedToDos, toDos
+    } = this.state;
+    // if(!loadedToDos){
+    //   return <AppLoading />;
+    // }
+
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         <Text style={styles.title}>Todo App</Text>
         <View style={styles.card}>
-          <TextInput style={styles.input} placeholder={"New To Do"} valud={newTodo} onChangeText={this._crontollNewTodo} placeholderTextColor={"#999"} returnKeyType={"done"} />
+          <TextInput
+            style={styles.input}
+            placeholder={"New To Do"}
+            value={newTodo}
+            onChangeText={this._controlNewTodo}
+            placeholderTextColor={"#999"}
+            returnKeyType={"done"}
+            autoCorrect={false}
+          />
           <ScrollView contentContainerStyle={styles.toDos}>
             <Todo />
           </ScrollView>
@@ -35,11 +56,11 @@ export default function App() {
     );
   }
 
-  _crontollNewTodo = text => {
+  _controlNewTodo = text => {
     this.setState({
       newToDo: text
-    })
-  }
+    });
+  };
 }
 
 const styles = StyleSheet.create({
@@ -85,3 +106,5 @@ const styles = StyleSheet.create({
     fontSize: 25
   }
 });
+
+export default App;
