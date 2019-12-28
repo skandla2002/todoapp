@@ -16,9 +16,6 @@ const { height, width } = Dimensions.get("window");
 class App extends Component {
   state = {
     newToDo: ""
-    // ,
-    // loadedToDos: false,
-    // toDos: {}
   };
 
   // componentDidMount = () => {
@@ -42,7 +39,7 @@ class App extends Component {
           <TextInput
             style={styles.input}
             placeholder={"New To Do"}
-            value={newTodo}
+            value={newToDo}
             onChangeText={this._controlNewTodo}
             placeholderTextColor={"#999"}
             returnKeyType={"done"}

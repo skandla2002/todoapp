@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: ""
+    justifyContent: "center"
   },
   circle: {
     width: 30,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: width / 2,
-    jusrfyContent: "space-between"
+    justifyContent: "space-between"
   },
   actions: {
     flexDirection: "row"
