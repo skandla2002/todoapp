@@ -4,7 +4,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  TextInput
 } from "react-native";
 
 const { width, height } = Dimensions.get("window");
@@ -12,7 +13,8 @@ const { width, height } = Dimensions.get("window");
 export default class ToDo extends React.Component {
   state = {
     isEditing: false,
-    isCompleted: false
+    isCompleted: false,
+    toDoValue: ""
   };
   render() {
     const { isCompleted, isEditing } = this.state;
@@ -38,13 +40,18 @@ export default class ToDo extends React.Component {
         </View>
         <View style={styles.column}>
           {isEditing ? (
-            <View style={styles.actions}>
-              <TouchableOpacity>
-                <View style={styles.actionsContainer}>
-                  <Text style={styles.actionText}>v</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            <TextInput
+              style={[
+                styles.input,
+                styles.text,
+                isCompleted ? styles.completedText : styles.uncompletedText
+              ]}
+              value={toDoValue}
+              multiline={true}
+              onChangeText={this._controllInput}
+              returnKeyType={"done"}
+              onBlur={_._finishEditing}
+            />
           ) : (
             <View style={styles.actions}>
               <TouchableOpacity onPressOut={this._startEditing}>
@@ -71,13 +78,20 @@ export default class ToDo extends React.Component {
     });
   };
   _startEditing = () => {
+    const { text } = this.props;
     this.setState({
-      isEditing: true
+      isEditing: true,
+      text: text
     });
   };
   _finishEditing = () => {
     this.setState({
       isEditing: false
+    });
+  };
+  _controllInput = () => {
+    this.setState({
+      toDoValue: text
     });
   };
 }
@@ -132,5 +146,9 @@ const styles = StyleSheet.create({
   actionsContainer: {
     marginVertical: 10,
     marginHorizontal: 10
+  },
+  input: {
+    marginVertical: 20,
+    width: width / 2
   }
 });

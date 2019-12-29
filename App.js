@@ -15,7 +15,9 @@ const { height, width } = Dimensions.get("window");
 
 class App extends Component {
   state = {
-    newToDo: ""
+    newToDo: "",
+    isCompleted: false,
+    toDoValue: ""
   };
 
   // componentDidMount = () => {
@@ -30,6 +32,7 @@ class App extends Component {
     // if(!loadedToDos){
     //   return <AppLoading />;
     // }
+    const { text } = this.props;
 
     return (
       <View style={styles.container}>
@@ -46,7 +49,7 @@ class App extends Component {
             autoCorrect={false}
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            <Todo />
+            <Todo text={"Hello I`m a "} />
           </ScrollView>
         </View>
       </View>
