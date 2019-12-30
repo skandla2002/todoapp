@@ -19,21 +19,19 @@ export default class ToDo extends React.Component {
   static propTypes = {
     text: PropTypes.string.isRequired,
     isCompleted: PropTypes.bool.isRequired,
-    delete: PropTypes.func.isRequired,
-    id: PropTypes.string.isRequired
-  };
-  state = {
-    isEditing: false,
-    isCompleted: false,
-    toDoValue: ""
+    deleteToDo: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired,
+    uncompleteToDo: PropTypes.func.isRequired,
+    completeToDo: PropTypes.func.isRequired,
+    updateToDo: PropTypes.func.isRequired
   };
   render() {
-    const { isCompleted, isEditing, toDoValue } = this.state;
-    const { text, id, deleteToDo } = this.props;
+    const { isEditing, toDoValue } = this.state;
+    const { text, id, deleteToDo, isCompleted } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.column}>
-          <TouchableOpacity onPress={this._finishEditing}>
+          <TouchableOpacity onPress={this._toggleComplete}>
             <View
               style={[
                 styles.circle,
@@ -41,16 +39,7 @@ export default class ToDo extends React.Component {
               ]}
             />
           </TouchableOpacity>
-          <Text
-            style={
-              (styles.text,
-              isCompleted ? styles.completedText : styles.uncompletedText)
-            }
-          >
-            Hello I`m a ToDo
-          </Text>
-        </View>
-        <View style={styles.column}>
+
           {isEditing ? (
             <TextInput
               style={[
@@ -65,45 +54,64 @@ export default class ToDo extends React.Component {
               onBlur={this._finishEditing}
             />
           ) : (
-            <View style={styles.actions}>
-              <TouchableOpacity onPressOut={this._startEditing}>
-                <View style={styles.actionsContainer}>
-                  <Text style={styles.actionText}>ㅁ</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress>
-                <View style={styles.actionsContainer}>
-                  <Text style={styles.actionText}>x</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            <Text
+              style={[
+                styles.text,
+                isCompleted ? styles.completedText : styles.uncompletedText
+              ]}
+            >
+              {text}
+            </Text>
           )}
         </View>
+        
+        {isEditing ? (
+          <View style={styles.actions}>
+            <TouchableOpacity onPressOut={this._finishEditing}>
+              <View style={styles.actionContainer}>
+                <Text style={styles.actionText}>✅</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.actoins}>
+            <TouchableOpacity onPressOut={this._startEditing}>
+              <View style={styles.actionContainer}>
+                <Text style={styles.actionText}>✏️</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPressOut={event => {
+                event.stopPropagation();
+                deleteToDo(id);
+              }}
+            >
+              <View style={styles.actionContainer}>
+                <Text style={styles.actionText}>❌</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     );
   }
   _toggleComplete = event => {
-    event.stopPropagation;
-    const { isCompleted } = thit.props;
+    event.stopPropagation();
+    const { isCompleted, uncompleteToDo, completeToDo, id } = thit.props;
     if (isCompleted) {
-      uncompleteToDo();
+      uncompleteToDo(id);
+    } else {
+      completeToDo(id);
     }
-    this.setState(prevState => {
-      return {
-        isCompleted: !prevState.isCompleted
-      };
-    });
   };
   _startEditing = event => {
-    event.stopPropagation;
-    const { text } = this.props;
+    event.stopPropagation();
     this.setState({
-      isEditing: true,
-      toDoValue: text
+      isEditing: true
     });
   };
   _finishEditing = event => {
-    event.stopPropagation;
+    event.stopPropagation();
     const { toDoValue } = this.state;
     const { id, updateToDo } = this.props;
     updateToDo(id, toDoValue);
@@ -125,14 +133,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "space-between"
   },
   circle: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    borderColor: "red",
-    borderWidth: 10,
+    borderWidth: 3,
     marginRight: 20
   },
   completedCircle: {
@@ -145,9 +152,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 20,
     marginVertical: 20
-  },
-  circle: {
-    width: 100
   },
   completedText: {
     color: "#bbb",
@@ -166,12 +170,13 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: "row"
   },
-  actionsContainer: {
+  actionContainer: {
     marginVertical: 10,
     marginHorizontal: 10
   },
   input: {
-    marginVertical: 20,
-    width: width / 2
+    marginVertical: 15,
+    width: width / 2,
+    paddingBottom: 5
   }
 });

@@ -16,12 +16,11 @@ import uuidv1 from "uuid/v1";
 
 const { height, width } = Dimensions.get("window");
 
-class App extends Component {
+export default class App extends React.Component {
   state = {
     newToDo: "",
     loadedToDos: false,
-    isCompleted: false,
-    toDoValue: ""
+    toDos: {}
   };
 
   componentDidMount = () => {
@@ -30,15 +29,11 @@ class App extends Component {
 
   render() {
     const {
-      newToDo
-      // , loadedToDos, toDos
+      newToDo, loadedToDos, toDos
     } = this.state;
     if (!loadedToDos) {
       <AppLoading />;
     }
-
-    const { text } = this.props;
-
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -48,7 +43,7 @@ class App extends Component {
             style={styles.input}
             placeholder={"New To Do"}
             value={newToDo}
-            onChangeText={this._controlNewTodo}
+            onChangeText={this._controllNewTodo}
             placeholderTextColor={"#999"}
             returnKeyType={"done"}
             autoCorrect={false}
@@ -56,18 +51,23 @@ class App extends Component {
             underlineColorAndroid={"transparent"}
           />
           <ScrollView contentContainerStyle={styles.toDos}>
-            {Object.values(toDos).reverse().map(toDo => (
-              <Todo key={toDo.id}
-                    _deleteToDo={this._deleteToDo}
-                    {...toDo} />
+            {Object.values(toDos)
+              .reverse()
+              .map(toDo => (
+                <Todo
+                  key={toDo.id}
+                  _deleteToDo={this._deleteToDo}
+                  uncompleteToDo={this._uncompleteToDo}
+                  _completeToDo={this._completeToDo}
+                  {...toDo}
+                />
             ))}
           </ScrollView>
         </View>
       </View>
     );
   }
-
-  _controlNewTodo = text => {
+  _controllNewTodo = text => {
     this.setState({
       newToDo: text
     });
@@ -85,7 +85,6 @@ class App extends Component {
     } catch(err){
       console.log(err)
     }
-    
   };
   _addToDo = () => {
     const { newToDo } = this.state;
@@ -111,6 +110,7 @@ class App extends Component {
             ...newToDoObject
           }
         };
+        this._saveToDos(newState.toDos);
         return { ...newState };
         // toDos: prevState.toDos + newToDo
       });
@@ -133,13 +133,14 @@ class App extends Component {
     }
   };
   _deleteToDo = (id) => {
-    this.setState(provState = > {
+    this.setState(provState => {
       const toDos = prevState.toDos;
       delete toDos[id];
       const newState = {
         ...prevState,
         ...toDos
       };
+      this._saveToDos(newState.toDos);
       return { ...newState};
     })
   };
@@ -155,7 +156,8 @@ class App extends Component {
             isCompleted: false
           }
         }
-      }
+      };
+      this._saveToDos(newState.toDos);
       return {...newState}
     })
   };
@@ -168,23 +170,24 @@ class App extends Component {
           ...prevState.toDos,
           [id]: {
             ...prevState.toDos[id],
-            isCompleted: false
+            isCompleted: true
           }
         }
-      }
-      return {...newState}
-    })
+      };
+      this._saveToDos(newState.toDos);
+      return {...newState};
+    });
   };
-  _updateToDo = (id) => {
+  _updateToDo = (id, text) => {
     this.setState(prevState => {
       const newState = { 
         ...prevState,
         toDos: {
           ...prevState.toDos,
-          [id]: { ...prevState.toDo[id], text: text}
+          [id]: { ...prevState.toDos[id], text: text}
         }
       };
-      this._saveToDos(newState.toDo)
+      this._saveToDos(newState.toDos)
       return { ...newState};
     })
   }
@@ -200,9 +203,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F23657",
-    alignItems: "center",
-    justifyContent: "center"
-  },
+    alignItems: "center"},
   title: {
     color: "white",
     fontSize: 30,
@@ -216,10 +217,9 @@ const styles = StyleSheet.create({
     width: width - 25,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    elevation: 5,
     ...Platform.select({
       ios: {
-        shadowColor: "rgba(50, 50, 50)",
+        shadowColor: "rgb(50, 50, 50)",
         shadowOpacity: 0.5,
         shadowRadius: 5,
         shadowOffset: {
@@ -237,7 +237,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#bbb",
     borderBottomWidth: 1,
     fontSize: 25
+  },
+  toDos: {
+    alignItem: "center"
   }
 });
-
-export default App;
