@@ -28,7 +28,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "co.nomadcoders.kawai"
+      "package": "co.todo.android"
     }
   }
 }
