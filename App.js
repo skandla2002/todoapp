@@ -11,7 +11,7 @@ import {
   AsyncStorage
 } from "react-native";
 import { AppLoading } from "expo";
-import Todo from "./ToDo";
+import ToDo from "./ToDo";
 import uuidv1 from "uuid/v1";
 
 const { height, width } = Dimensions.get("window");
@@ -28,9 +28,7 @@ export default class App extends React.Component {
   };
 
   render() {
-    const {
-      newToDo, loadedToDos, toDos
-    } = this.state;
+    const { newToDo, loadedToDos, toDos } = this.state;
     if (!loadedToDos) {
       <AppLoading />;
     }
@@ -54,14 +52,15 @@ export default class App extends React.Component {
             {Object.values(toDos)
               .reverse()
               .map(toDo => (
-                <Todo
+                <ToDo
                   key={toDo.id}
-                  _deleteToDo={this._deleteToDo}
+                  deleteToDo={this._deleteToDo}
                   uncompleteToDo={this._uncompleteToDo}
-                  _completeToDo={this._completeToDo}
+                  completeToDo={this._completeToDo}
+                  updateToDo={this._updateToDo}
                   {...toDo}
                 />
-            ))}
+              ))}
           </ScrollView>
         </View>
       </View>
@@ -73,8 +72,8 @@ export default class App extends React.Component {
     });
   };
 
-  _loadToDos = async() => {
-    try{
+  _loadToDos = async () => {
+    try {
       const toDos = await AsyncStorage.getItem("toDos");
       const parsedToDos = JSON.parse(toDos);
       console.log(toDos);
@@ -82,8 +81,8 @@ export default class App extends React.Component {
         loadedToDos: true,
         toDos: parsedToDos || {}
       });
-    } catch(err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
   };
   _addToDo = () => {
@@ -99,7 +98,7 @@ export default class App extends React.Component {
             id: ID,
             isCompleted: false,
             text: newToDo,
-            createAt: Date.now()
+            createdAt: Date.now()
           }
         };
         const newState = {
@@ -132,8 +131,8 @@ export default class App extends React.Component {
       // }
     }
   };
-  _deleteToDo = (id) => {
-    this.setState(provState => {
+  _deleteToDo = id => {
+    this.setState(prevState => {
       const toDos = prevState.toDos;
       delete toDos[id];
       const newState = {
@@ -141,11 +140,11 @@ export default class App extends React.Component {
         ...toDos
       };
       this._saveToDos(newState.toDos);
-      return { ...newState};
-    })
+      return { ...newState };
+    });
   };
 
-  _uncompleteToDo = (id) => {
+  _uncompleteToDo = id => {
     this.setState(prevState => {
       const newState = {
         ...prevState,
@@ -158,11 +157,11 @@ export default class App extends React.Component {
         }
       };
       this._saveToDos(newState.toDos);
-      return {...newState}
-    })
+      return { ...newState };
+    });
   };
 
-  _completeToDo = (id) => {
+  _completeToDo = id => {
     this.setState(prevState => {
       const newState = {
         ...prevState,
@@ -175,35 +174,35 @@ export default class App extends React.Component {
         }
       };
       this._saveToDos(newState.toDos);
-      return {...newState};
+      return { ...newState };
     });
   };
   _updateToDo = (id, text) => {
     this.setState(prevState => {
-      const newState = { 
+      const newState = {
         ...prevState,
         toDos: {
           ...prevState.toDos,
-          [id]: { ...prevState.toDos[id], text: text}
+          [id]: { ...prevState.toDos[id], text: text }
         }
       };
-      this._saveToDos(newState.toDos)
-      return { ...newState};
-    })
-  }
+      this._saveToDos(newState.toDos);
+      return { ...newState };
+    });
+  };
 
-  _saveToDo = newToDos => {
+  _saveToDos = newToDos => {
     console.log(JSON.stringify(newToDos));
     const saveToDos = AsyncStorage.setItem("toDos", JSON.stringify(newToDos));
-  }
-
+  };
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F23657",
-    alignItems: "center"},
+    alignItems: "center"
+  },
   title: {
     color: "white",
     fontSize: 30,
@@ -239,6 +238,6 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   toDos: {
-    alignItem: "center"
+    alignItems: "center"
   }
 });

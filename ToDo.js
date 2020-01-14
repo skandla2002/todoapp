@@ -16,6 +16,7 @@ export default class ToDo extends React.Component {
     super(props);
     this.state = { isEditing: false, toDoValue: props.text };
   }
+
   static propTypes = {
     text: PropTypes.string.isRequired,
     isCompleted: PropTypes.bool.isRequired,
@@ -25,6 +26,7 @@ export default class ToDo extends React.Component {
     completeToDo: PropTypes.func.isRequired,
     updateToDo: PropTypes.func.isRequired
   };
+
   render() {
     const { isEditing, toDoValue } = this.state;
     const { text, id, deleteToDo, isCompleted } = this.props;
@@ -64,7 +66,7 @@ export default class ToDo extends React.Component {
             </Text>
           )}
         </View>
-        
+
         {isEditing ? (
           <View style={styles.actions}>
             <TouchableOpacity onPressOut={this._finishEditing}>
@@ -97,7 +99,7 @@ export default class ToDo extends React.Component {
   }
   _toggleComplete = event => {
     event.stopPropagation();
-    const { isCompleted, uncompleteToDo, completeToDo, id } = thit.props;
+    const { isCompleted, uncompleteToDo, completeToDo, id } = this.props;
     if (isCompleted) {
       uncompleteToDo(id);
     } else {
