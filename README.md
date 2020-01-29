@@ -35,3 +35,9 @@ npm install -g exp
 # 리액스 자료:
 
 https://github.com/reactkr/learn-react-in-korean
+
+# 나만의 todo app 만들기
+
+npm install -g turtle-cli
+
+expo build:android -t apk
