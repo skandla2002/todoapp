@@ -41,3 +41,5 @@ https://github.com/reactkr/learn-react-in-korean
 npm install -g turtle-cli
 
 expo build:android -t apk
+
+신규 앱 개발은 react-native로 새로 시작 필요
