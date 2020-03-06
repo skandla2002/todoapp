@@ -43,3 +43,5 @@ https://github.com/reactkr/learn-react-in-korean
 모바일 앱, 모바일 클라이언트, 모바일 관련 서버 풀로 지정하기
 
 최초 앱 개발
+
+모바일 피씨적용
