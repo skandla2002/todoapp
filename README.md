@@ -47,3 +47,5 @@ https://github.com/reactkr/learn-react-in-korean
 모바일 피씨적용
 
 테스트 소스도 만들기
+
+Redux effect에 put,  select,  call등 여러가지가있음
